@@ -1,0 +1,7 @@
+{
+  "name": "snap",
+  "version": "1.0.0",
+  "description": "Lightweight directory snapshot tool.",
+  "owner": "Knittight",
+  "dependencies": []
+}
