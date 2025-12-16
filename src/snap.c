@@ -111,7 +111,10 @@ void cmd_list(void) {
   printf("-----  --------------------  ----------------------------\n");
 
   while (fgets(line, sizeof(line), f)) {
-    char *id = strtok(line, "|");
+    char line_copy[MAX_LINE];
+    strncpy(line_copy, line, MAX_LINE);
+
+    char *id = strtok(line_copy, "|");
     char *ts = strtok(NULL, "|");
     char *msg = strtok(NULL, "\n");
 
@@ -123,6 +126,8 @@ void cmd_list(void) {
       msg = "";
 
     // Trim leading spaces
+    while (*id == ' ')
+      id++;
     while (*ts == ' ')
       ts++;
     while (*msg == ' ')
@@ -199,7 +204,19 @@ void cmd_delete(const char *id) {
 
   char line[MAX_LINE];
   while (fgets(line, sizeof(line), f)) {
-    char *snap_id = strtok(line, "|");
+    // Make a copy before strtok modifies it
+    char line_copy[MAX_LINE];
+    strncpy(line_copy, line, MAX_LINE);
+
+    char *snap_id = strtok(line_copy, "|");
+
+    // Trim whitespace from snap_id
+    if (snap_id) {
+      while (*snap_id == ' ')
+        snap_id++;
+    }
+
+    // Only write the line if it's NOT the one we're deleting
     if (!snap_id || strcmp(snap_id, id) != 0) {
       fprintf(tmp, "%s", line);
     }
