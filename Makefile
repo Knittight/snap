@@ -6,6 +6,7 @@ BIN     = src/snap
 all: $(BIN)
 
 $(BIN): $(SRC)
+	mkdir -p src
 	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 
 clean:
