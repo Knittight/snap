@@ -3,18 +3,16 @@ CFLAGS  = -Wall -Wextra -O2
 SRC     = src/snap.c
 BIN     = snap
 
-all: $(BIN)
+all: $(BIN) install
 
 $(BIN): $(SRC)
 	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 
-make: $(BIN)
-	gcc -Wall -Wextra -O2 src/snap.c -o snap
-	cp snap /usr/local/bin
-	rm snap
-	echo "snap is installed"
+install: $(BIN)
+	cp $(BIN) /usr/local/bin/
+	@echo "snap installed to /usr/local/bin"
 
 clean:
 	rm -f $(BIN)
 
-.PHONY: all clean make
+.PHONY: all install clean
