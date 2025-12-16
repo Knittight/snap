@@ -1,6 +1,6 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -O2
-SRC     = src/snap.c
+SRC     = snap.c
 BIN     = src/snap
 
 all: $(BIN)
