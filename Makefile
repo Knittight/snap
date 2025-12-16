@@ -9,7 +9,7 @@ $(BIN): $(SRC)
 	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 
 install: $(BIN)
-	cp $(BIN) /usr/local/bin/
+	sudo cp $(BIN) /usr/local/bin/
 	@echo "snap installed to /usr/local/bin"
 
 clean:
