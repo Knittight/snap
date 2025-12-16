@@ -8,7 +8,13 @@ all: $(BIN)
 $(BIN): $(SRC)
 	$(CC) $(CFLAGS) $(SRC) -o $(BIN)
 
+make: $(BIN)
+	gcc -Wall -Wextra -O2 src/snap.c -o snap
+	cp snap /usr/local/bin
+	rm snap
+	echo "snap is installed"
+
 clean:
 	rm -f $(BIN)
 
-.PHONY: all clean
+.PHONY: all clean make
