@@ -3,5 +3,13 @@
   "version": "1.0.0",
   "description": "Lightweight directory snapshot tool.",
   "owner": "galaxyg144 @ Knittight",
-  "dependencies": []
+  "dependencies": [
+    "apt:rsync",
+    "apt:build-essential",
+    "pacman:rsync",
+    "pacman:base-devel",
+    "dnf:rsync",
+    "dnf:gcc",
+    "dnf:make"
+  ]
 }
