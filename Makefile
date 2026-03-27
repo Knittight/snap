@@ -1,7 +1,7 @@
 CC      = gcc
 CFLAGS  = -Wall -Wextra -O2
-SRC     = snap.c
-BIN     = src/snap
+SRC     = chrono.c
+BIN     = src/chrono
 
 all: $(BIN)
 

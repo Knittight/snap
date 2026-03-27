@@ -5,8 +5,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
-#define SNAP_DIR ".snap"
-#define INDEX_FILE ".snap/index.txt"
+#define SNAP_DIR ".chrono"
+#define INDEX_FILE ".chrono/index.txt"
 #define MAX_LINE 512
 
 void die(const char *msg) {
@@ -21,12 +21,12 @@ int exists(const char *path) {
 
 void cmd_init(void) {
   if (exists(SNAP_DIR)) {
-    printf("snap: already initialized\n");
+    printf("kchrono: already initialized\n");
     return;
   }
 
   if (mkdir(SNAP_DIR, 0755) != 0)
-    die("mkdir .snap");
+    die("mkdir .chrono");
 
   FILE *f = fopen(INDEX_FILE, "w");
   if (!f)
@@ -59,7 +59,7 @@ void timestamp(char *buf, size_t size) {
 
 void cmd_save(const char *msg) {
   if (!exists(SNAP_DIR)) {
-    printf("snap: not initialized (run `snap init`)\n");
+    printf("kchrono: not initialized (run `chrono init`)\n");
     return;
   }
 
@@ -73,12 +73,12 @@ void cmd_save(const char *msg) {
   char cmd[1024];
   snprintf(cmd, sizeof(cmd),
            "rsync -a --delete "
-           "--exclude '.snap' --exclude '.git' "
+           "--exclude '.chrono' --exclude '.git' "
            "./ %s",
            path);
 
   if (system(cmd) != 0) {
-    printf("snap: rsync failed\n");
+    printf("kchrono: rsync failed\n");
     return;
   }
 
@@ -97,7 +97,7 @@ void cmd_save(const char *msg) {
 
 void cmd_list(void) {
   if (!exists(INDEX_FILE)) {
-    printf("snap: no snapshots\n");
+    printf("kchrono: no snapshots\n");
     return;
   }
 
@@ -140,7 +140,7 @@ void cmd_list(void) {
 
 void cmd_restore(const char *id) {
   if (!exists(SNAP_DIR)) {
-    printf("snap: not initialized\n");
+    printf("kchrono: not initialized\n");
     return;
   }
 
@@ -148,7 +148,7 @@ void cmd_restore(const char *id) {
   snprintf(path, sizeof(path), "%s/%s", SNAP_DIR, id);
 
   if (!exists(path)) {
-    printf("snap: snapshot '%s' not found\n", id);
+    printf("kchrono: snapshot '%s' not found\n", id);
     return;
   }
 
@@ -157,12 +157,12 @@ void cmd_restore(const char *id) {
   char cmd[1024];
   snprintf(cmd, sizeof(cmd),
            "rsync -a --delete "
-           "--exclude '.snap' --exclude '.git' "
+           "--exclude '.chrono' --exclude '.git' "
            "%s/ ./",
            path);
 
   if (system(cmd) != 0) {
-    printf("snap: restore failed\n");
+    printf("kchrono: restore failed\n");
     return;
   }
 
@@ -171,7 +171,7 @@ void cmd_restore(const char *id) {
 
 void cmd_delete(const char *id) {
   if (!exists(SNAP_DIR)) {
-    printf("snap: not initialized\n");
+    printf("kchrono: not initialized\n");
     return;
   }
 
@@ -179,7 +179,7 @@ void cmd_delete(const char *id) {
   snprintf(path, sizeof(path), "%s/%s", SNAP_DIR, id);
 
   if (!exists(path)) {
-    printf("snap: snapshot '%s' not found\n", id);
+    printf("kchrono: snapshot '%s' not found\n", id);
     return;
   }
 
@@ -188,7 +188,7 @@ void cmd_delete(const char *id) {
   snprintf(cmd, sizeof(cmd), "rm -rf %s", path);
 
   if (system(cmd) != 0) {
-    printf("snap: failed to delete snapshot directory\n");
+    printf("kchrono: failed to delete snapshot directory\n");
     return;
   }
 
@@ -232,7 +232,7 @@ void cmd_delete(const char *id) {
 
 void cmd_status(void) {
   if (!exists(SNAP_DIR)) {
-    printf("snap: not initialized\n");
+    printf("kchrono: not initialized\n");
     return;
   }
 
@@ -267,15 +267,15 @@ void cmd_status(void) {
 }
 
 void print_help(void) {
-  printf("snap - directory snapshot manager\n\n");
+  printf("chrono - directory snapshot manager\n\n");
   printf("Usage:\n");
-  printf("  snap init              Initialize snapshot repository\n");
-  printf("  snap save [message]    Save current directory state\n");
-  printf("  snap list              List all snapshots\n");
-  printf("  snap restore <id>      Restore a snapshot\n");
-  printf("  snap delete <id>       Delete a snapshot\n");
-  printf("  snap status            Show snapshot statistics\n");
-  printf("  snap help              Show this help\n");
+  printf("  chrono init              Initialize snapshot repository\n");
+  printf("  chrono save [message]    Save current directory state\n");
+  printf("  chrono list              List all snapshots\n");
+  printf("  chrono restore <id>      Restore a snapshot\n");
+  printf("  chrono delete <id>       Delete a snapshot\n");
+  printf("  chrono status            Show snapshot statistics\n");
+  printf("  chrono help              Show this help\n");
 }
 
 int main(int argc, char **argv) {
@@ -292,15 +292,15 @@ int main(int argc, char **argv) {
     cmd_list();
   } else if (strcmp(argv[1], "restore") == 0) {
     if (argc < 3) {
-      printf("snap: missing snapshot id\n");
-      printf("usage: snap restore <id>\n");
+      printf("kchrono: missing snapshot id\n");
+      printf("usage: chrono restore <id>\n");
       return 1;
     }
     cmd_restore(argv[2]);
   } else if (strcmp(argv[1], "delete") == 0) {
     if (argc < 3) {
-      printf("snap: missing snapshot id\n");
-      printf("usage: snap delete <id>\n");
+      printf("kchrono: missing snapshot id\n");
+      printf("usage: chrono delete <id>\n");
       return 1;
     }
     cmd_delete(argv[2]);
@@ -309,7 +309,7 @@ int main(int argc, char **argv) {
   } else if (strcmp(argv[1], "help") == 0 || strcmp(argv[1], "--help") == 0) {
     print_help();
   } else {
-    printf("snap: unknown command '%s'\n", argv[1]);
+    printf("kchrono: unknown command '%s'\n", argv[1]);
     print_help();
     return 1;
   }
